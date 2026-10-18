@@ -324,3 +324,44 @@ button:focus-visible {
 .betting-panel > .subtitle {
     margin-bottom: 20px;
 }
+
+/* 10. BETTING OPTIONS */
+
+.bet-options {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.bet-button {
+    min-height: 48px;
+    padding: 10px 8px;
+    background: var(--surface-light);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--white);
+    cursor: pointer;
+    font-weight: 700;
+    transition: 
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.bet-button:hover:not(:disabled) {
+    background: #3a2855;
+    border-color: var(--purple);
+    transform: translateY(-2px);
+}
+
+.bet-button.selected {
+    background: rgba(167, 139, 250, 0.2);
+    border-color: var(--purple);
+    color: var(--purple-light);
+    box-shadow: 0 0 0 1px rgba(167, 139, 250, 0.12);
+}
+
+.bet-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+}
