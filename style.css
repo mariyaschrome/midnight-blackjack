@@ -508,3 +508,23 @@ button:focus-visible {
     font-weight: 700;
     overflow-wrap: anywhere;
  }
+
+ /* 15. FOOTER */
+
+ .game-footer {
+    margin-top: 26px;
+    padding: 16px 8px;
+    color: var(--muted);
+    font-size: 0.72rem;
+    letter-spacing: 0.07em;
+    text-align: center;
+ }
+
+ .game-footer p {
+    margin: 6px 0;
+ }
+
+ .game-footer p:last-child {
+    font-size: 0.8rem;
+    letter-spacing: 0;
+ }
