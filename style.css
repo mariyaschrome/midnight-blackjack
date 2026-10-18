@@ -49,3 +49,11 @@ button:focus-visible {
     outline: 2px solid var(--purple-light);
     outline-offset: 4px;
 }
+
+/* 2. MAING GAME CONTAINER */
+
+.game-container {
+    width: 100%;
+    max-width: 760px;
+    margin: 0 auto;
+}
