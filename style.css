@@ -440,3 +440,11 @@ button:focus-visible {
         #b69aff
     );
 }
+ /* 13. GAME CONTROLS */
+
+ .game-controls {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 16px;
+ }
