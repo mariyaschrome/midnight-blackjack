@@ -365,3 +365,25 @@ button:focus-visible {
     cursor: not-allowed;
     opacity: 0.4;
 }
+
+/* 11. CURRENT BET */
+
+.current-bet {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 20px 0;
+    padding: 15px 16px;
+    background: rgba(10, 7, 16, 0.35);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--muted);
+}
+
+.current-bet strong {
+    color: var(--gold);
+    font-size: 1.1rem;
+}
+
+/* 12. GENERAL ACTION BUTTONS */
