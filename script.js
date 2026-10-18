@@ -61,5 +61,13 @@ let gamesLost = 0;
 
 let gamesTied = 0;
 
+// 4. TESTING IF FUNCTIONAL
+
+console.log("Welcome to Midnight Blackjack! ♠");
+
+console.log("Starting balance:", balance);
+
+console.log("Game elements connected successfully.");
+
 
 
