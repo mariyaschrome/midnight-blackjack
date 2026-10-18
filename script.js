@@ -51,5 +51,15 @@ let dealerCards = [];
 
 let gameActive = false;
 
+// 3. CREATE STATS COUNTERS
+
+let gamesPlayed = 0;
+
+let gamesWon = 0;
+
+let gamesLost = 0;
+
+let gamesTied = 0;
+
 
 
