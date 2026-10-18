@@ -270,3 +270,34 @@ button:focus-visible {
     border-radius: 50%;
     font-size: 1.4rem;
 }
+
+/* 8. GAME MESSAGE */
+
+.game-message {
+    margin: 18px 0;
+    padding: 15px 18px;
+    background: rgba(167, 139,250,0.08);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    color: var(--purple-light);
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* Optional message classes for JS */
+
+.game-message.win {
+    border-color: rgba(94, 230, 168, 0.4);
+    color: var(--green);
+}
+
+.game-message.lose {
+    border-color: rgba(255, 117, 143, 0.4);
+    color: var(--red);
+}
+
+.game-message.push {
+    border-color: rgba(245, 213, 139, 0.4);
+    color: var(--gold);
+}
