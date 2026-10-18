@@ -37,3 +37,19 @@ const gamesLostDisplay = document.getElementById("games-lost");
 const winRateDisplay = document.getElementById("win-rate");
 
 
+// 2. CREATE INITIAL GAME VALUES
+
+let balance = 1000;
+
+let currentBet = 0;
+
+let deck = [];
+
+let playerCards = [];
+
+let dealerCards = [];
+
+let gameActive = false;
+
+
+
