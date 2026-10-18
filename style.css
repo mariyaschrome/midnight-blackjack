@@ -89,3 +89,49 @@ button:focus-visible {
     color: var(--muted);
     font-size: 0.95rem;
 }
+
+/* 4. WALLET AND BALANCE */
+
+.wallet {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 22px;
+    padding: 22px 24px;
+    background-color: linear-gradient(135deg, #2c2041, #1b1429);
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.18);
+}
+
+.label {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+}
+
+.wallet h2 {
+    margin: 6px 0 0;
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
+    font-weight: 800;
+}
+
+.wallet h2 span {
+    color: var(--gold);
+    font-size: 0.75rem;
+}
+
+.wallet-icon {
+    display: grid;
+    width: 58px;
+    height: 58px;
+    flex-shrink: 0;
+    place-items: center;
+    background: rgba(167, 139, 250, 0.12);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    font-size: 1.8rem;
+}
