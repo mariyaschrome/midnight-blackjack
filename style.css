@@ -301,3 +301,26 @@ button:focus-visible {
     border-color: rgba(245, 213, 139, 0.4);
     color: var(--gold);
 }
+
+/* 9. BETTING PANEL */
+
+.betting-panel {
+    margin-top: 22px;
+    padding: 24px;
+    background: linear-gradient(
+        145deg,
+        #241833,
+        #191122
+    );
+    border: 1px solid var(--border);
+    border-radius: 20px;
+}
+
+.betting-panel h2 {
+    margin: 0;
+    font-size: 1.4rem;
+}
+
+.betting-panel > .subtitle {
+    margin-bottom: 20px;
+}
