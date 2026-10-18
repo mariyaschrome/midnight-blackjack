@@ -544,3 +544,61 @@ button:focus-visible {
  }
 
  /* 17. TABLET AND MOBILE RESPONSIVENESS */
+
+ @media (max-width: 600px) {
+    body {
+        padding: 22px 12px;
+    }
+
+    .wallet,
+    .playing-area,
+    .betting-panel,
+    .stats-panel {
+        padding: 18px;
+    }
+
+    .wallet-icon {
+        width: 48px;
+        height: 48px;
+        font-size: 1.5rem;
+    }
+
+    .card-hand {
+        gap: 8px;
+    }
+
+    .playing-card,
+    .card-placeholder {
+        width: 72px;
+        height: 102px;
+    }
+
+    .card-center {
+        font-size: 1.7rem;
+    }
+
+    .bet-options {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .stat-card {
+        padding: 16px 8px;
+    }
+
+    .stat-card h3 {
+        font-size: 1.6rem;
+    }
+
+    .game-controls {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .game-controls .action-button:last-child {
+        grid-column: 1 / -1;
+    }
+ }
