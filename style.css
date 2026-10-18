@@ -602,3 +602,38 @@ button:focus-visible {
         grid-column: 1 / -1;
     }
  }
+
+ /* 18. EXTRA SMALL PHONES */
+
+ @media (max-width: 360px) {
+    .game-header h1 {
+        font-size: 2rem;
+    }
+
+    .wallet,
+    .playing-area,
+    .betting-panel,
+    .stats-panel {
+        padding: 14px;
+    }
+
+    .playing-card,
+    .card-placeholder {
+        width: 62px;
+        height: 90px;
+    }
+
+    .card-top,
+    .card-bottom {
+        font-size: 0.8rem;
+    }
+
+    .card-center {
+        font-size: 1.4rem;
+    }
+
+    .stat-label {
+        font-size: 0.75rem;
+    }
+ }
+ 
