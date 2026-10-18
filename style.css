@@ -387,3 +387,56 @@ button:focus-visible {
 }
 
 /* 12. GENERAL ACTION BUTTONS */
+
+.action-button {
+    min-height: 48px;
+    padding: 12px 18px;
+    background: var(--surface-light);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--white);
+    cursor: pointer;
+    font-weight: 700;
+    transition: 
+        transform 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease,
+        opacity 0.2s ease;
+}
+
+.action-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    background: #3a2855;
+    border-color: var(--purple);
+}
+
+.action-button:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.action-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+}
+
+.primary-button {
+    width: 100%;
+    min-height: 54px;
+    background: linear-gradient(
+        135deg,
+        var(--purple-dark),
+        #9b72ec
+    );
+    border: none;
+    color: #fff;
+    font-size: 1rem;
+    box-shadow: 0 8px 20px rgba(124, 58, 237, 0.2);
+}
+
+.primary-button:hover:not(:disabled) {
+    background: linear-gradient(
+        135deg,
+        #8b5cf6,
+        #b69aff
+    );
+}
