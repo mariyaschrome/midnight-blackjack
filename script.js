@@ -26,3 +26,14 @@ const standButton = document.getElementById("stand-button");
 
 const newGameButton = document.getElementById("new-game-button");
 
+// Game statistics
+
+const gamesPlayedDisplay = document.getElementById("games-played");
+
+const gamesWonDisplay = document.getElementById("games-won");
+
+const gamesLostDisplay = document.getElementById("games-lost");
+
+const winRateDisplay = document.getElementById("win-rate");
+
+
