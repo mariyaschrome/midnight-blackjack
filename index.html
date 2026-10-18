@@ -6,6 +6,82 @@
         <title>Midnight Blackjack</title>
     </head> 
     <body>
-        
+        <main class="game-container"> 
+
+            <!-- Game heading --> 
+            <header class="game-header">
+                <p class="eyebrow">THE MIDNIGHT TABLE</p>
+                <h1>BLACKJACK <span>♠</span></h1>
+                <p class="subtitle">Your luck. Your move.</p>
+            </header>
+
+            <!-- Player's virtual money -->
+             <section class="wallet">
+                <div>
+                    <p class="label">YOUR BALANCE˗ˋˏ⛀⛁ ⛁⛀ˎˊ˗</p>
+                    <h2 id="balance">1000 <span>❂</span></h2>
+                </div>
+
+                <div class="wallet-icon">💎</div>
+             </section>
+
+             <!-- Dealer's side -->
+              <section class="playing-area">
+                <div class="hand-heading">
+                    <div>
+                        <p class="label">THE HOUSE</p>
+                        <h2>Dealer</h2>
+                    </div>
+
+                    <div class="hand-score" id="dealer-score">-</div>
+                </div>
+
+                <div class="card-hand" id="dealer-hand">
+                    <div class="card placeholder">♠</div>
+              </section>
+
+              <!-- Game  message -->
+               <div class="game-message" id="game-message" role="status">
+                Place your bet to start the game.
+               </div>
+
+               <!-- Player's side -->
+                <section class="playing-area player-area">
+                    <div class="hand-heading">
+                        <div>
+                            <p class="label">YOUR HAND</p>
+                            <h2>You</h2>
+                        </div>
+
+                        <div class="hand-score" id="player-score">-</div>
+                    </div>
+
+                    <div class="card-hand" id="player-hand">
+                        <div class="card placeholder">❤︎</div>
+                    </div>
+                </section>
+
+                <!-- Betting Panel -->
+                 <section class="betting-panel">
+                    <h2>Place Your Bet</h2>
+                    <p class="subtitle">Choose how many chips to wager.</p>
+
+                    <div class="bet-options" id="bet-options">
+                        <button class="bet-button" data-bet="25">25 <span>❂</span></button>
+                        <button class="bet-button" data-bet="50">50 <span>❂</span></button>
+                        <button class="bet-button" data-bet="100">100 <span>❂</span></button>
+                        <button class="bet-button" data-bet="500">500 <span>❂</span></button>
+                    </div>
+
+                    <div class="current-bet">
+                        <span>Current Bet</span>
+                        <strong><span id="current-bet">0</span> <span>❂</span></strong>
+                    </div>
+
+                    <button class="action-button primary-button" id="deal-button">Deal cards 🃁🂡🂱🃑</button>
+                 </section>
+
+                 <!-- Game controls -->
+        </main>   
     </body>
 </html>
