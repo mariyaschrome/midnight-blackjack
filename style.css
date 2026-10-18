@@ -199,3 +199,74 @@ button:focus-visible {
 
 /* 7. PLAYING CARDS 
     Will be used in Js */
+
+.playing-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 86px;
+    height: 120px;
+    flex-shrink: 0;
+    padding: 8px;
+    background: #fffdfb;
+    border: 1px solid #e5deec;
+    border-radius: 12px;
+    color: #20172b;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+    animation: card-appear 0.3s ease-out;
+}
+
+.card-top {
+    align-self: flex-start;
+    font-size: 0.95rem;
+    font-weight: 800;
+    line-height: 1.1;
+}
+
+.card-center {
+    align-self: center;
+    font-size: 2rem;
+    line-height: 1;
+}
+
+.card-bottom {
+    align-self: flex-end;
+    font-size: 0.95rem;
+    font-weight: 800;
+    line-height: 1.1;
+    transform: rotate(180deg);
+}
+
+.red-suit {
+    color: #d92e55;
+}
+
+.black-suit {
+    color: #20172b;
+}
+
+.face-down {
+    display: grid;
+    place-items: center;
+    background: 
+        repeating-linear-gradient(
+            45deg,
+            #6d3db4,
+            #6d3db4 5px,
+            #482477 5px,
+            #482477 10px
+        );
+    border: 3px solid #d8c6ff;
+    color: #fff;
+}
+
+.card-back-symbol {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    font-size: 1.4rem;
+}
