@@ -176,4 +176,12 @@ function calculateScore(cards) {
     return score;
 }
 
+const testHand = [
+    { rank: "A", suit: "♦", value: 11 },
+    { rank: "9", suit: "♣", value: 9 },
+    { rank: "5", suit: "♥", value: 5 }
+];
+
+console.log("Test hand score:", calculateScore(testHand));
+
 
