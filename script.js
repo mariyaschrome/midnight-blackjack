@@ -422,3 +422,6 @@ function hit() {
     // Otherwise, the player can keep playing
     gameMessage.textContent = "Your score is " + playerScore + ". Hit os stand? ♠";
 }
+
+/* 17. CONNECT THE HIT BUTTON */
+hitButton.addEventListener("click", hit);
