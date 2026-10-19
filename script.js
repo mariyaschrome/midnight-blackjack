@@ -513,3 +513,8 @@ function newGame() {
 
 // Connect the New Game button
 newGameButton.addEventListener("click", newGame);
+
+/* 20. INITIALIZE THE TABLE */
+
+// Prepare the table when the page loads
+newGame();
