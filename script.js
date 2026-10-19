@@ -379,3 +379,6 @@ function stand() {
     standButton.disabled = true;
 }
 
+/* 15. CONNECT THE STAND BUTTON */
+standButton.addEventListener("click", stand);
+
