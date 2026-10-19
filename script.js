@@ -468,3 +468,48 @@ function placeBet(event) {
 betButtons.forEach(function(button) {
     button.addEventListener("click", placeBet);
 });
+
+/* 19. START A FRESH GAME */
+
+function newGame() {
+    // Stop any round currently in progress
+    gameActive = false;
+
+    // Reset the player's hand and dealer's hand
+    playerCards = [];
+    dealerCards = [];
+
+    // Clear the displayed cards
+    playerHand.innerHTML = "";
+    dealerHand.innerHTML = "";
+
+    // Reset the displayed scores
+    playerScoreDisplay.textContent = "0";
+    dealerScoreDisplay.textContent = "0";
+
+    // Reset the current bet
+    currentBet = 0;
+    currentBetDisplay.textContent = "0";
+
+    // Update the messsage
+    gameMessage.textContent = "Place your bet to begin! ♠";
+
+    // Remove the selected bet highlight
+    betButtons.forEach(function(button) {
+        button.classList.remove("selected-bet");
+    });
+
+    // Reset the buttons
+    dealButton.disabled = false;
+    hitButton.disabled = true;
+    standButton.disabled = true;
+
+    // Update betting buttons based on the balance
+    betButtons.forEach(function(button) {
+        const amount = Number(button.dataset.bet);
+        button.disabled = amount > balance;
+    });
+}
+
+// Connect the New Game button
+newGameButton.addEventListener("click", newGame);
