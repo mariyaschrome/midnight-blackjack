@@ -69,5 +69,40 @@ console.log("Starting balance:", balance);
 
 console.log("Game elements connected successfully.");
 
+// 5. CREATE A STANDARD 52-CARD DECK
+
+function createDeck() {
+    const suits = ["♥", "♦", "♣", "♠"];
+
+    const ranks = [
+        "A", "2", "3", "4", "5", "6", "7",
+        "8", "9", "10", "J", "Q", "K"
+    ];
+
+    const newDeck = [];
+
+    for (const suit of suits) {
+        for (const rank of ranks) {
+
+            let value;
+
+            if (rank === "A") {
+                value = 11;
+            } else if (["J", "Q", "K"].includes(rank)) {
+                value = 10;
+            } else {
+                value = Number(rank);
+            }
+
+            newDeck.push({
+                suit: suit,
+                rank: rank,
+                value: value
+            });
+        }
+    }
+
+    return newDeck;
+}
 
 
