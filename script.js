@@ -425,3 +425,46 @@ function hit() {
 
 /* 17. CONNECT THE HIT BUTTON */
 hitButton.addEventListener("click", hit);
+
+/* 18. PLACE AND CHANGE BETS */
+
+function placeBet(event) {
+    // Betting is not allowed during an active round
+    if (gameActive) {
+        gameMessage.textContent = "Finish your round before changing your bet!";
+        return;
+    }
+
+    // Get the value from the button clicked
+    const betAmount = Number(event.currentTarget.dataset.bet);
+
+    // Check that the bet is a valid number
+    if (!Number.isFinite(betAmount) || betAmount <= 0) {
+        return;
+    }
+
+    // Check that the player can afford the bet
+    if (betAmount > balance) {
+        gameMessage.textContent = "Not enough chips for that bet! 💎";
+        return;
+    }
+
+    // Save and display the selected bet
+    currentBet = betAmount;
+    currentBetDisplay.textContent = currentBet;
+
+    // Update the game message
+    gameMessage.textContent = "Your bet is " + currentBet + " ⛃. Ready to deal? ♠";
+
+    // Highlight the seleceted betting button
+    betButtons.forEach(function(button) {
+        button.classList.remove("selected-bet");
+    });
+
+    event.currentTarget.classList.add("selected-bet");
+}
+
+// Connect every betting button
+betButtons.forEach(function(button) {
+    button.addEventListener("click", placeBet);
+});
