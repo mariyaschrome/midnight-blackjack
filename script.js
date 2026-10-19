@@ -299,3 +299,7 @@ function startGame() {
     }
 }
 
+/* 13. CONNECT THE DEAL BUTTON */
+
+dealButton.addEventListener("click", startGame);
+
