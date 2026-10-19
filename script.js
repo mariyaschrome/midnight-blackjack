@@ -1,89 +1,94 @@
-/* MIDNIGHT BLACKJACK JS foundations */
+/* MIDNIGHT BLACKJACK: now with Double Down, Split and saved progress */
 
 // 1. CONNECT JS TO HTML ELEMENTS
 
 const balanceDisplay = document.getElementById("balance");
-
 const currentBetDisplay = document.getElementById("current-bet");
-
 const dealerHand = document.getElementById("dealer-hand");
-
 const playerHand = document.getElementById("player-hand");
-
 const dealerScoreDisplay = document.getElementById("dealer-score");
-
 const playerScoreDisplay = document.getElementById("player-score");
-
 const gameMessage = document.getElementById("game-message");
-
 const betButtons = document.querySelectorAll(".bet-button");
 
 const dealButton = document.getElementById("deal-button");
-
 const hitButton = document.getElementById("hit-button");
-
 const standButton = document.getElementById("stand-button");
-
+const doubleButton = document.getElementById("double-button"); // NEW
+const splitButton = document.getElementById("split-button");   // NEW
 const newGameButton = document.getElementById("new-game-button");
 
-// Game statistics
-
 const gamesPlayedDisplay = document.getElementById("games-played");
-
 const gamesWonDisplay = document.getElementById("games-won");
-
 const gamesLostDisplay = document.getElementById("games-lost");
-
 const winRateDisplay = document.getElementById("win-rate");
 
+// 2. SETTINGS AND GAME VALUES
 
-// 2. CREATE INITIAL GAME VALUES
+const STORAGE_KEY = "midnightBlackjackSave";
+const STARTING_BALANCE = 1000;
+const MAX_HANDS = 4; // how many hands a player can split into
 
-let balance = 1000;
-
+let balance = STARTING_BALANCE;
 let currentBet = 0;
-
 let deck = [];
-
-let playerCards = [];
-
 let dealerCards = [];
-
 let gameActive = false;
 
-// 3. CREATE STATS COUNTERS
+// The player can now have several hands (after splitting).
+// Each hand: { cards: [], bet: number, done: boolean, natural: boolean }
+let playerHands = [];
+let activeHand = 0;
+
+// 3. STATS COUNTERS
 
 let gamesPlayed = 0;
-
 let gamesWon = 0;
-
 let gamesLost = 0;
-
 let gamesTied = 0;
 
-// 4. TESTING IF FUNCTIONAL
+// 4. SAVE AND LOAD PROGRESS
 
-console.log("Welcome to Midnight Blackjack! ♠");
+function saveProgress() {
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+            balance, gamesPlayed, gamesWon, gamesLost, gamesTied
+        }));
+    } catch (error) {
+        console.log("Could not save progress:", error);
+    }
+}
 
-console.log("Starting balance:", balance);
+function loadProgress() {
+    try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) {
+            return;
+        }
 
-console.log("Game elements connected successfully.");
+        const data = JSON.parse(raw);
+        const num = (value, fallback) =>
+            Number.isFinite(value) && value >= 0 ? value : fallback;
 
-// 5. CREATE A STANDARD 52-CARD DECK
+        balance = num(data.balance, STARTING_BALANCE);
+        gamesPlayed = num(data.gamesPlayed, 0);
+        gamesWon = num(data.gamesWon, 0);
+        gamesLost = num(data.gamesLost, 0);
+        gamesTied = num(data.gamesTied, 0);
+    } catch (error) {
+        console.log("Could not load saved progress:", error);
+    }
+}
+
+// 5. CREATE AND SHUFFLE A DECK
 
 function createDeck() {
     const suits = ["♥", "♦", "♣", "♠"];
-
-    const ranks = [
-        "A", "2", "3", "4", "5", "6", "7",
-        "8", "9", "10", "J", "Q", "K"
-    ];
-
+    const ranks = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
     const newDeck = [];
 
     for (const suit of suits) {
         for (const rank of ranks) {
-
             let value;
 
             if (rank === "A") {
@@ -94,80 +99,45 @@ function createDeck() {
                 value = Number(rank);
             }
 
-            newDeck.push({
-                suit: suit,
-                rank: rank,
-                value: value
-            });
+            newDeck.push({ suit: suit, rank: rank, value: value });
         }
     }
 
     return newDeck;
 }
 
-//6. SHUFFLE THE DECK
-
 function shuffleDeck(cards) {
     for (let i = cards.length - 1; i > 0; i--) {
-
-        const randomIndex = Math.floor(
-            Math.random() * (i + 1)
-        );
-
-        [cards[i], cards[randomIndex]] = [
-            cards[randomIndex],
-            cards[i]
-        ];
+        const randomIndex = Math.floor(Math.random() * (i + 1));
+        [cards[i], cards[randomIndex]] = [cards[randomIndex], cards[i]];
     }
 
     return cards;
 }
 
-// 7. CREATE AND SHUFFLE FIRST DECK
-
-deck = shuffleDeck(createDeck());
-
-console.log("Deck created successfully!");
-
-console.log("Number of cards:", deck.length);
-
-console.log("Example card:", deck[0]);
-
-
-/* 8. DRAW A CARD FROM THE DECK */
-
 function drawCard() {
-    // Check whether any cards remain
     if (deck.length === 0) {
         console.log("The deck is empty!");
         return null;
     }
 
-    // Remove and return the top card
-    const card = deck.pop();
-
-    console.log("Card drawn:", card.rank, card.suit);
-
-    return card;
+    return deck.pop();
 }
 
-/* 9. CALCULATE A HAND'S SCORE */
+// 6. SCORING
 
 function calculateScore(cards) {
     let score = 0;
     let aces = 0;
 
-    // Add up the value of every card
     for (const card of cards) {
         score += card.value;
 
-        // Count Aces so we can adjust them later
         if (card.rank === "A") {
             aces++;
         }
     }
 
-    // An Ace starts at 11, but can count as 1
     while (score > 21 && aces > 0) {
         score -= 10;
         aces--;
@@ -176,28 +146,23 @@ function calculateScore(cards) {
     return score;
 }
 
-/* 10. DISPLAY A PLAYING CARD */
+// 7. DISPLAY HELPERS
 
 function renderCard(card, hidden = false) {
-    // Create HTML element for the card
     const cardElement = document.createElement("div");
-
-    // Give the card its CSS classes
     cardElement.classList.add("playing-card");
 
-    // Display the back of the dealer's hidden card
     if (hidden) {
         cardElement.classList.add("card-back");
         cardElement.textContent = "♠";
         return cardElement;
     }
 
-    // Make hearts and diamonds red
+    // Make sure this class name matches your CSS
     if (card.suit === "♥" || card.suit === "♦") {
         cardElement.classList.add("red-card");
     }
 
-    // Add the card's rank and suit
     cardElement.innerHTML = `
         <span class="card-rank">${card.rank}</span>
         <span class="card-suit">${card.suit}</span>
@@ -206,191 +171,163 @@ function renderCard(card, hidden = false) {
     return cardElement;
 }
 
-/* 11. DISPLAY THE PLAYER'S AND DEALER'S HANDS */
-
 function renderHands(hideDealerCard = false) {
-    // Clear the current cards from the table
     playerHand.innerHTML = "";
     dealerHand.innerHTML = "";
 
-    // Display the player's cards
-    for (const card of playerCards) {
-        playerHand.appendChild(renderCard(card));
-    }
+    // Each player hand gets its own group so split hands sit side by side
+    playerHands.forEach(function(hand, index) {
+        const group = document.createElement("div");
+        group.classList.add("hand-group");
 
-    // Display the dealer's cards
-    for (let i = 0; i < dealerCards.length; i++) {
-        const shouldHide = hideDealerCard && i === 1;
-
-        dealerHand.appendChild(
-            renderCard(dealerCards[i], shouldHide)
-        );
-    }
-
-    // Update the player's score
-    playerScoreDisplay.textContent = 
-         calculateScore(playerCards);
-
-    // Update the dealer's visible score
-    if (hideDealerCard && dealerCards.length > 1) {
-        dealerScoreDisplay.textContent = 
-           calculateScore([dealerCards[0]]) + " + ?";
-    } else {
-        dealerScoreDisplay.textContent =
-           calculateScore(dealerCards);
-    }
-}
-
-/* 12. START NEW ROUND */
-
-function startGame() {
-    // Prevent starting another round mid-game
-    if (gameActive) {
-        return;
-    }
-
-    // Check that a bet has been placed
-    if (currentBet <= 0) {
-        gameMessage.textContent = "Place your bet first! 💎";
-        return;
-    }
-
-    // Check that the player can afford the bet
-    if (currentBet > balance) {
-        gameMessage.textContent = "Not enough chips for that bet!";
-        return;
-    }
-
-    // Deduct the bet from the player's balance
-    balance -= currentBet;
-    balanceDisplay.textContent = balance;
-
-    // Prepare a fresh deck for the round
-    deck = shuffleDeck(createDeck());
-
-    // Clear the previous hands
-    playerCards = [];
-    dealerCards = [];
-
-    // Deal two cards to each slide
-    playerCards.push(drawCard());
-    dealerCards.push(drawCard());
-    playerCards.push(drawCard());
-    dealerCards.push(drawCard());
-
-    // Mark the round as active
-    gameActive = true;
-
-    // Display the hands, hiding the dealer's second card
-    renderHands(true);
-
-    // Update the message
-    gameMessage.textContent = "Your move! Hit or stand. ♠";
-
-    // Update button availability 
-    dealButton.disabled = true;
-    hitButton.disabled = false;
-    standButton.disabled = false;
-
-    // Check for a natural Blackjack
-    if (calculateScore(playerCards) === 21) {
-        gameMessage.textContent = "Blackjack! Let's see the dealer's hand. ♠";
-        stand();
-    }
-}
-
-/* 13. CONNECT THE DEAL BUTTON */
-
-dealButton.addEventListener("click", startGame);
-
-/* 14. DEALER'S TURN AND ROUND RESULTS */
-
-function stand() {
-    // Do nothing if there is no active round
-    if (!gameActive) {
-        return;
-    }
-
-    // Reveal the dealer's hidden card
-    renderHands(false);
-
-    // Dealer draws until reaching at least 17
-    while (calculateScore(dealerCards) < 17) {
-        const card = drawCard();
-
-        if (card === null) {
-            break;
+        if (gameActive && playerHands.length > 1 && index === activeHand) {
+            group.classList.add("active-hand");
         }
 
-        dealerCards.push(card);
+        for (const card of hand.cards) {
+            group.appendChild(renderCard(card));
+        }
+
+        playerHand.appendChild(group);
+    });
+
+    for (let i = 0; i < dealerCards.length; i++) {
+        const shouldHide = hideDealerCard && i === 1;
+        dealerHand.appendChild(renderCard(dealerCards[i], shouldHide));
     }
 
-    // Show both complete hands and scores
-    renderHands(false);
+    // Player score(s): "18" or "18 | 21" when split
+    playerScoreDisplay.textContent = playerHands.length > 0
+        ? playerHands.map(function(hand) {
+            return calculateScore(hand.cards);
+        }).join(" | ")
+        : "0";
 
-    // Calculate final scores
-    const playerScore = calculateScore(playerCards);
-    const dealerScore = calculateScore(dealerCards);
-
-    // Count this completed game
-    gamesPlayed++;
-
-    // Determine the result
-    if (playerScore > 21) {
-        gameMessage.textContent = "Bust! the dealer wins. 💔";
-        gamesLost++;
-    } else if (dealerScore > 21) {
-        gameMessage.textContent = "Dealer busts! You win! 💜"
-        gamesWon++;
-        balance += currentBet * 2;
-    } else if (playerScore > dealerScore) {
-        gameMessage.textContent = "You win! Beautifully played. ♛";
-        gamesWon++;
-        balance += currentBet * 2;
-    } else if (playerScore < dealerScore) {
-        gameMessage.textContent = "The dealer wins this round. ♠";
-        gamesLost++;
+    // Dealer score
+    if (dealerCards.length === 0) {
+        dealerScoreDisplay.textContent = "0";
+    } else if (hideDealerCard && dealerCards.length > 1) {
+        dealerScoreDisplay.textContent = calculateScore([dealerCards[0]]) + " + ?";
     } else {
-        gameMessage.textContent = "It's a tie! Your bet is returned.";
-        gamesTied++;
-        balance += currentBet;
+        dealerScoreDisplay.textContent = calculateScore(dealerCards);
     }
+}
 
-    // Update the wallet
+function updateStats() {
     balanceDisplay.textContent = balance;
-
-    // Update game statistics
     gamesPlayedDisplay.textContent = gamesPlayed;
     gamesWonDisplay.textContent = gamesWon;
     gamesLostDisplay.textContent = gamesLost;
 
     const winRate = gamesPlayed > 0
-    ? Math.round((gamesWon / gamesPlayed) * 100)
-    : 0;
+        ? Math.round((gamesWon / gamesPlayed) * 100)
+        : 0;
 
     winRateDisplay.textContent = winRate + "%";
-
-    // Mark the round as finished
-    gameActive = false;
-
-    // Update buttons
-    dealButton.disabled = false;
-    hitButton.disabled = true;
-    standButton.disabled = true;
 }
 
-/* 15. CONNECT THE STAND BUTTON */
-standButton.addEventListener("click", stand);
+function getMinBet() {
+    return Math.min(...Array.from(betButtons).map(function(button) {
+        return Number(button.dataset.bet);
+    }));
+}
 
-/* 16. HIT - DRAW ANOTHER CARD */
+function updateBetButtons() {
+    betButtons.forEach(function(button) {
+        const amount = Number(button.dataset.bet);
+        button.disabled = gameActive || amount > balance;
+    });
+}
 
-function hit() {
-    // Only allow hits during an active round
-    if (!gameActive) {
+// 8. RULES: WHAT CAN THE PLAYER DO RIGHT NOW?
+
+function currentHand() {
+    return playerHands[activeHand];
+}
+
+function canSplit(hand) {
+    return hand.cards.length === 2
+        && hand.cards[0].value === hand.cards[1].value
+        && playerHands.length < MAX_HANDS
+        && balance >= hand.bet;
+}
+
+function updateControls() {
+    const hand = currentHand();
+    const canAct = gameActive && hand && !hand.done;
+
+    dealButton.disabled = gameActive;
+    hitButton.disabled = !canAct;
+    standButton.disabled = !canAct;
+    doubleButton.disabled = !(canAct && hand.cards.length === 2 && balance >= hand.bet);
+    splitButton.disabled = !(canAct && canSplit(hand));
+
+    // Show the total on the table during a round, the chosen bet otherwise
+    if (gameActive) {
+        currentBetDisplay.textContent = playerHands.reduce(function(total, h) {
+            return total + h.bet;
+        }, 0);
+    } else {
+        currentBetDisplay.textContent = currentBet;
+    }
+}
+
+// 9. START A ROUND
+
+function startGame() {
+    if (gameActive) {
         return;
     }
 
-    // Draw a card and add it to the player's hand
+    if (currentBet <= 0) {
+        gameMessage.textContent = "Place your bet first! 💎";
+        return;
+    }
+
+    if (currentBet > balance) {
+        gameMessage.textContent = "Not enough chips for that bet!";
+        return;
+    }
+
+    balance -= currentBet;
+
+    deck = shuffleDeck(createDeck());
+    dealerCards = [];
+    playerHands = [{ cards: [], bet: currentBet, done: false, natural: false }];
+    activeHand = 0;
+
+    playerHands[0].cards.push(drawCard());
+    dealerCards.push(drawCard());
+    playerHands[0].cards.push(drawCard());
+    dealerCards.push(drawCard());
+
+    gameActive = true;
+    updateStats();
+    updateBetButtons();
+    renderHands(true);
+
+    // Natural blackjack: round ends straight away
+    if (calculateScore(playerHands[0].cards) === 21) {
+        playerHands[0].natural = true;
+        playerHands[0].done = true;
+        gameMessage.textContent = "Blackjack! Let's see the dealer's hand. ♠";
+        dealerTurn();
+        return;
+    }
+
+    gameMessage.textContent = "Your move! Hit, stand, double or split. ♠";
+    updateControls();
+}
+
+// 10. PLAYER ACTIONS
+
+function hit() {
+    const hand = currentHand();
+
+    if (!gameActive || !hand || hand.done) {
+        return;
+    }
+
     const card = drawCard();
 
     if (card === null) {
@@ -398,65 +335,229 @@ function hit() {
         return;
     }
 
-    playerCards.push(card);
+    hand.cards.push(card);
+    const score = calculateScore(hand.cards);
 
-    // Refresh the cards and store on the table
+    if (score >= 21) {
+        hand.done = true; // bust or 21: this hand is finished
+    }
+
     renderHands(true);
 
-    const playerScore = calculateScore(playerCards);
-
-    // Check whether the player has gone bust
-    if (playerScore > 21) {
-        gameMessage.textContent = "Bust! You've gone over 21. 💔";
-        stand();
-        return;
+    if (hand.done) {
+        nextHand();
+    } else {
+        gameMessage.textContent = "Your score is " + score + ". Hit or stand? ♠";
+        updateControls();
     }
-
-    // Check whether the player has reached 21
-    if (playerScore === 21) {
-        gameMessage.textContent = "You have 21! Let's see the dealer's hand. ♛";
-        stand();
-        return;
-    }
-
-    // Otherwise, the player can keep playing
-    gameMessage.textContent = "Your score is " + playerScore + ". Hit os stand? ♠";
 }
 
-/* 17. CONNECT THE HIT BUTTON */
-hitButton.addEventListener("click", hit);
+function stand() {
+    const hand = currentHand();
 
-/* 18. PLACE AND CHANGE BETS */
+    if (!gameActive || !hand || hand.done) {
+        return;
+    }
+
+    hand.done = true;
+    renderHands(true);
+    nextHand();
+}
+
+function doubleDown() {
+    const hand = currentHand();
+
+    if (!gameActive || !hand || hand.done
+        || hand.cards.length !== 2 || balance < hand.bet) {
+        return;
+    }
+
+    // Double the bet, take exactly one card, then the hand is finished
+    balance -= hand.bet;
+    hand.bet *= 2;
+
+    const card = drawCard();
+
+    if (card !== null) {
+        hand.cards.push(card);
+    }
+
+    hand.done = true;
+    updateStats();
+    renderHands(true);
+    nextHand();
+}
+
+function split() {
+    const hand = currentHand();
+
+    if (!gameActive || !hand || hand.done || !canSplit(hand)) {
+        return;
+    }
+
+    // Place a matching bet on the new hand
+    balance -= hand.bet;
+
+    const movedCard = hand.cards.pop();
+    const newHand = { cards: [movedCard], bet: hand.bet, done: false, natural: false };
+
+    // Each hand gets a second card
+    hand.cards.push(drawCard());
+    newHand.cards.push(drawCard());
+
+    // The new hand sits right after the one that was split
+    playerHands.splice(activeHand + 1, 0, newHand);
+
+    // Split aces get one card only. Any hand that reaches 21 is finished.
+    const splittingAces = hand.cards[0].rank === "A";
+
+    [hand, newHand].forEach(function(h) {
+        if (splittingAces || calculateScore(h.cards) === 21) {
+            h.done = true;
+        }
+    });
+
+    updateStats();
+    renderHands(true);
+    nextHand();
+}
+
+// Move on to the next unfinished hand, or the dealer if all are done
+function nextHand() {
+    const next = playerHands.findIndex(function(h) {
+        return !h.done;
+    });
+
+    if (next === -1) {
+        dealerTurn();
+        return;
+    }
+
+    activeHand = next;
+    renderHands(true);
+
+    if (playerHands.length > 1) {
+        gameMessage.textContent = "Playing hand " + (next + 1) + " of " + playerHands.length + ". ♠";
+    } else {
+        gameMessage.textContent = "Your score is " + calculateScore(currentHand().cards) + ". Hit or stand? ♠";
+    }
+
+    updateControls();
+}
+
+// 11. DEALER'S TURN AND RESULTS
+
+function dealerTurn() {
+    // The dealer only needs to draw if a hand is still in the running
+    const needsDealer = playerHands.some(function(hand) {
+        return calculateScore(hand.cards) <= 21 && !hand.natural;
+    });
+
+    if (needsDealer) {
+        while (calculateScore(dealerCards) < 17) {
+            const card = drawCard();
+
+            if (card === null) {
+                break;
+            }
+
+            dealerCards.push(card);
+        }
+    }
+
+    settleRound();
+}
+
+function settleRound() {
+    const dealerScore = calculateScore(dealerCards);
+    const dealerNatural = dealerCards.length === 2 && dealerScore === 21;
+    const results = [];
+
+    playerHands.forEach(function(hand) {
+        const playerScore = calculateScore(hand.cards);
+        gamesPlayed++;
+
+        if (playerScore > 21) {
+            results.push({ short: "Bust", full: "Bust! The dealer wins. 💔" });
+            gamesLost++;
+        } else if (hand.natural) {
+            if (dealerNatural) {
+                results.push({ short: "Push", full: "Both have blackjack. Your bet is returned." });
+                gamesTied++;
+                balance += hand.bet;
+            } else {
+                results.push({ short: "Blackjack", full: "Blackjack! Pays 3:2. ♛" });
+                gamesWon++;
+                balance += Math.round(hand.bet * 2.5);
+            }
+        } else if (dealerNatural) {
+            results.push({ short: "Lose", full: "The dealer has blackjack. ♠" });
+            gamesLost++;
+        } else if (dealerScore > 21) {
+            results.push({ short: "Win", full: "Dealer busts! You win! 💜" });
+            gamesWon++;
+            balance += hand.bet * 2;
+        } else if (playerScore > dealerScore) {
+            results.push({ short: "Win", full: "You win! Beautifully played. ♛" });
+            gamesWon++;
+            balance += hand.bet * 2;
+        } else if (playerScore < dealerScore) {
+            results.push({ short: "Lose", full: "The dealer wins this round. ♠" });
+            gamesLost++;
+        } else {
+            results.push({ short: "Push", full: "It's a tie! Your bet is returned." });
+            gamesTied++;
+            balance += hand.bet;
+        }
+    });
+
+    // One hand: full message. Several hands: a short summary.
+    let message;
+
+    if (results.length === 1) {
+        message = results[0].full;
+    } else {
+        message = results.map(function(result, index) {
+            return "Hand " + (index + 1) + ": " + result.short;
+        }).join(" · ");
+    }
+
+    if (balance < getMinBet()) {
+        message += " You're out of chips. Press New Game for a fresh bankroll!";
+    }
+
+    gameActive = false;
+    renderHands(false);
+    updateStats();
+    saveProgress();
+    updateBetButtons();
+    updateControls();
+    gameMessage.textContent = message;
+}
+
+// 12. PLACE AND CHANGE BETS
 
 function placeBet(event) {
-    // Betting is not allowed during an active round
     if (gameActive) {
         gameMessage.textContent = "Finish your round before changing your bet!";
         return;
     }
 
-    // Get the value from the button clicked
     const betAmount = Number(event.currentTarget.dataset.bet);
 
-    // Check that the bet is a valid number
     if (!Number.isFinite(betAmount) || betAmount <= 0) {
         return;
     }
 
-    // Check that the player can afford the bet
     if (betAmount > balance) {
         gameMessage.textContent = "Not enough chips for that bet! 💎";
         return;
     }
 
-    // Save and display the selected bet
     currentBet = betAmount;
     currentBetDisplay.textContent = currentBet;
-
-    // Update the game message
     gameMessage.textContent = "Your bet is " + currentBet + " ⛃. Ready to deal? ♠";
 
-    // Highlight the seleceted betting button
     betButtons.forEach(function(button) {
         button.classList.remove("selected-bet");
     });
@@ -464,57 +565,53 @@ function placeBet(event) {
     event.currentTarget.classList.add("selected-bet");
 }
 
-// Connect every betting button
-betButtons.forEach(function(button) {
-    button.addEventListener("click", placeBet);
-});
-
-/* 19. START A FRESH GAME */
+// 13. START A FRESH TABLE
 
 function newGame() {
-    // Stop any round currently in progress
     gameActive = false;
-
-    // Reset the player's hand and dealer's hand
-    playerCards = [];
+    playerHands = [];
     dealerCards = [];
+    activeHand = 0;
 
-    // Clear the displayed cards
-    playerHand.innerHTML = "";
-    dealerHand.innerHTML = "";
+    // Broke? Start over with a fresh bankroll and fresh stats.
+    if (balance < getMinBet()) {
+        balance = STARTING_BALANCE;
+        gamesPlayed = 0;
+        gamesWon = 0;
+        gamesLost = 0;
+        gamesTied = 0;
+        saveProgress();
+    }
 
-    // Reset the displayed scores
-    playerScoreDisplay.textContent = "0";
-    dealerScoreDisplay.textContent = "0";
+    renderHands(false);
 
-    // Reset the current bet
     currentBet = 0;
-    currentBetDisplay.textContent = "0";
 
-    // Update the messsage
-    gameMessage.textContent = "Place your bet to begin! ♠";
-
-    // Remove the selected bet highlight
     betButtons.forEach(function(button) {
         button.classList.remove("selected-bet");
     });
 
-    // Reset the buttons
-    dealButton.disabled = false;
-    hitButton.disabled = true;
-    standButton.disabled = true;
+    gameMessage.textContent = "Place your bet to begin! ♠";
 
-    // Update betting buttons based on the balance
-    betButtons.forEach(function(button) {
-        const amount = Number(button.dataset.bet);
-        button.disabled = amount > balance;
-    });
+    updateStats();
+    updateBetButtons();
+    updateControls();
 }
 
-// Connect the New Game button
+// 14. CONNECT THE BUTTONS
+
+dealButton.addEventListener("click", startGame);
+hitButton.addEventListener("click", hit);
+standButton.addEventListener("click", stand);
+doubleButton.addEventListener("click", doubleDown);
+splitButton.addEventListener("click", split);
 newGameButton.addEventListener("click", newGame);
 
-/* 20. INITIALIZE THE TABLE */
+betButtons.forEach(function(button) {
+    button.addEventListener("click", placeBet);
+});
 
-// Prepare the table when the page loads
+// 15. INITIALIZE THE TABLE
+
+loadProgress();
 newGame();
