@@ -151,9 +151,29 @@ function drawCard() {
     return card;
 }
 
-const testCard = drawCard();
+/* 9. CALCULATE A HAND'S SCORE */
 
-console.log("Test draw successful:", testCard);
-console.log("Cards remaining:", deck.length);
+function calculateScore(cards) {
+    let score = 0;
+    let aces = 0;
+
+    // Add up the value of every card
+    for (const card of cards) {
+        score += card.value;
+
+        // Count Aces so we can adjust them later
+        if (card.rank === "A") {
+            aces++;
+        }
+    }
+
+    // An Ace starts at 11, but can count as 1
+    while (score > 21 && aces > 0) {
+        score -= 10;
+        aces--;
+    }
+
+    return score;
+}
 
 
