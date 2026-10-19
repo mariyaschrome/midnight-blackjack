@@ -134,3 +134,21 @@ console.log("Number of cards:", deck.length);
 console.log("Example card:", deck[0]);
 
 
+/* 8. DRAW A CARD FROM THE DECK */
+
+function drawCard() {
+    // Check whether any cards remain
+    if (deck.length === 0) {
+        console.log("The deck is empty!");
+        return null;
+    }
+
+    // Remove and return the top card
+    const card = deck.pop();
+
+    console.log("Card drawn:", card.rank, card.suit);
+
+    return card;
+}
+
+
