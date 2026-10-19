@@ -241,3 +241,61 @@ function renderHands(hideDealerCard = false) {
     }
 }
 
+/* 12. START NEW ROUND */
+
+function startGame() {
+    // Prevent starting another round mid-game
+    if (gameActive) {
+        return;
+    }
+
+    // Check that a bet has been placed
+    if (currentBet <= 0) {
+        gameMessage.textContent = "Place your bet first! 💎";
+        return;
+    }
+
+    // Check that the player can afford the bet
+    if (currentBet > balance) {
+        gameMessage.textContent = "Not enough chips for that bet!";
+        return;
+    }
+
+    // Deduct the bet from the player's balance
+    balance -= currentBet;
+    balanceDisplay.textContent = balance;
+
+    // Prepare a fresh deck for the round
+    deck = shuffleDeck(createDeck());
+
+    // Clear the previous hands
+    playerCards = [];
+    dealerCards = [];
+
+    // Deal two cards to each slide
+    playerCards.push(drawCard());
+    dealerCards.push(drawCard());
+    playerCards.push(drawCard());
+    dealerCards.push(drawCard());
+
+    // Mark the round as active
+    gameActive = true;
+
+    // Display the hands, hiding the dealer's second card
+    renderHands(true);
+
+    // Update the message
+    gameMessage.textContent = "Your move! Hit or stand. ♠";
+
+    // Update button availability 
+    dealButton.disabled = true;
+    hitButton.disabled = false;
+    standButton.disabled = false;
+
+    // Check for a natural Blackjack
+    if (calculateScore(playerCards) === 21) {
+        gameMessage.textContent = "Blackjack! Let's see the dealer's hand. ♠";
+        stand();
+    }
+}
+
