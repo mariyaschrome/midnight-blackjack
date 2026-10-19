@@ -151,4 +151,9 @@ function drawCard() {
     return card;
 }
 
+const testCard = drawCard();
+
+console.log("Test draw successful:", testCard);
+console.log("Cards remaining:", deck.length);
+
 
