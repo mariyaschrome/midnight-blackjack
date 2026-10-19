@@ -206,4 +206,38 @@ function renderCard(card, hidden = false) {
     return cardElement;
 }
 
+/* 11. DISPLAY THE PLAYER'S AND DEALER'S HANDS */
+
+function renderHands(hideDealerCard = false) {
+    // Clear the current cards from the table
+    playerHand.innerHTML = "";
+    dealerHand.innerHTML = "";
+
+    // Display the player's cards
+    for (const card of playerCards) {
+        playerHand.appendChild(renderCard(card));
+    }
+
+    // Display the dealer's cards
+    for (let i = 0; i < dealerCards.length; i++) {
+        const shouldHide = hideDealerCard && i === 1;
+
+        dealerHand.appendChild(
+            renderCard(dealerCards[i], shouldHide)
+        );
+    }
+
+    // Update the player's score
+    playerScoreDisplay.textContent = 
+         calculateScore(playerCards);
+
+    // Update the dealer's visible score
+    if (hideDealerCard && dealerCards.length > 1) {
+        dealerScoreDisplay.textContent = 
+           calculateScore(dealerCards[0]) + " + ?";
+    } else {
+        dealerScoreDisplay.textContent =
+           calculateScore(dealerCards);
+    }
+}
 
