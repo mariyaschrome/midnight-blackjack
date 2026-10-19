@@ -303,3 +303,79 @@ function startGame() {
 
 dealButton.addEventListener("click", startGame);
 
+/* 14. DEALER'S TURN AND ROUND RESULTS */
+
+function stand() {
+    // Do nothing if there is no active round
+    if (!gameActive) {
+        return;
+    }
+
+    // Reveal the dealer's hidden card
+    renderHands(false);
+
+    // Dealer draws until reaching at least 17
+    while (calculateScore(dealerCards) < 17) {
+        const card = drawCard();
+
+        if (card === null) {
+            break;
+        }
+
+        dealerCards.push(card);
+    }
+
+    // Show both complete hands and scores
+    renderHands(false);
+
+    // Calculate final scores
+    const playerScore = calculateScore(playerCards);
+    const dealerScore = calculateScore(dealerCards);
+
+    // Count this completed game
+    gamesPlayed++;
+
+    // Determine the result
+    if (playerScore > 21) {
+        gameMessage.textContent = "Bust! the dealer wins. 💔";
+        gamesLost++;
+    } else if (dealerScore > 21) {
+        gameMessage.textContent = "Dealer busts! You win! 💜"
+        gamesWon++;
+        balance += currentBet * 2;
+    } else if (playerScore > dealerScore) {
+        gameMessage.textContent = "You win! Beautifully played. ♛";
+        gamesWon++;
+        balance += currentBet * 2;
+    } else if (playerScore < dealerScore) {
+        gameMessage.textContent = "The dealer wins this round. ♠";
+        gamesLost++;
+    } else {
+        gameMessage.textContent = "It's a tie! Your bet is returned.";
+        gamesTied++;
+        balance += currentBet;
+    }
+
+    // Update the wallet
+    balanceDisplay.textContent = balance;
+
+    // Update game statistics
+    gamesPlayedDisplay.textContent = gamesPlayed;
+    gamesWonDisplay.textContent = gamesWon;
+    gamesLostDisplay.textContent = gamesLost;
+
+    const winRate = gamesPlayed > 0
+    ? Math.round((gamesWon / gamesPlayed) * 100)
+    : 0;
+
+    winRateDisplay.textContent = winRate + "%";
+
+    // Mark the round as finished
+    gameActive = false;
+
+    // Update buttons
+    dealButton.disabled = false;
+    hitButton.disabled = true;
+    standButton.disabled = true;
+}
+
