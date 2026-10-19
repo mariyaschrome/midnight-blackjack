@@ -699,3 +699,7 @@ button:focus-visible {
     border-color: #d8b4fe;
     box-shadow: 0 0 14px rgba(168, 85, 247, 0.45);
  }
+
+ .hand-group { display: flex; gap: 6px; padding: 6px; border-radius: 10px; }
+ .active-hand { outline: 2px solid gold; }
+ #player-hand { display: flex; gap: 16px; flex-wrap: wrap; }
