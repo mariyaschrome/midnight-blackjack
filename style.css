@@ -690,3 +690,12 @@ button:focus-visible {
     justify-content: center;
     font-size: 2rem;
  }
+
+ /* SELECTED BET BUTTON */
+
+ .bet-button.bet-button.selected-bet {
+    background: linear-gradient(135deg, #6d28a8, #a855f7);
+    color: #ffffff;
+    border-color: #d8b4fe;
+    box-shadow: 0 0 14px rgba(168, 85, 247, 0.45);
+ }
