@@ -382,3 +382,43 @@ function stand() {
 /* 15. CONNECT THE STAND BUTTON */
 standButton.addEventListener("click", stand);
 
+/* 16. HIT - DRAW ANOTHER CARD */
+
+function hit() {
+    // Only allow hits during an active round
+    if (!gameActive) {
+        return;
+    }
+
+    // Draw a card and add it to the player's hand
+    const card = drawCard();
+
+    if (card === null) {
+        gameMessage.textContent = "No cards left in the deck!";
+        return;
+    }
+
+    playerCards.push(card);
+
+    // Refresh the cards and store on the table
+    renderHands(true);
+
+    const playerScore = calculateScore(playerCards);
+
+    // Check whether the player has gone bust
+    if (playerScore > 21) {
+        gameMessage.textContent = "Bust! You've gone over 21. 💔";
+        stand();
+        return;
+    }
+
+    // Check whether the player has reached 21
+    if (playerScore === 21) {
+        gameMessage.textContent = "You have 21! Let's see the dealer's hand. ♛";
+        stand();
+        return;
+    }
+
+    // Otherwise, the player can keep playing
+    gameMessage.textContent = "Your score is " + playerScore + ". Hit os stand? ♠";
+}
