@@ -176,12 +176,34 @@ function calculateScore(cards) {
     return score;
 }
 
-const testHand = [
-    { rank: "A", suit: "♦", value: 11 },
-    { rank: "9", suit: "♣", value: 9 },
-    { rank: "5", suit: "♥", value: 5 }
-];
+/* 10. DISPLAY A PLAYING CARD */
 
-console.log("Test hand score:", calculateScore(testHand));
+function renderCard(card, hidden = false) {
+    // Create HTML element for the card
+    const cardElement = document.createElement("div");
+
+    // Give the card its CSS classes
+    cardElement.classList.add("playing-card");
+
+    // Display the back of the dealer's hidden card
+    if (hidden) {
+        cardElement.classList.add("card-back");
+        cardElement.textContent = "♠";
+        return cardElement;
+    }
+
+    // Make hearts and diamonds red
+    if (card.suit === "♥" || card.suit === "♦") {
+        cardElement.classList.add("redd-card");
+    }
+
+    // Add the card's rank and suit
+    cardElement.innerHTML = `
+        <span class="card-rank">${card.rank}</span>
+        <span class="card-suit">${card.suit}</span>
+    `;
+
+    return cardElement;
+}
 
 
