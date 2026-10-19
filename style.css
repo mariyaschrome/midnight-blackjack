@@ -649,3 +649,44 @@ button:focus-visible {
         transition-duration: 0.01ms !important;
     }
  }
+
+ /* PLAYING CARD STYLES  */
+
+ .playing-card {
+    width: 76px;
+    height: 108px;
+    padding: 10px;
+    background: #fffafc;
+    color: #171020;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    font-family: Georgia, serif;
+    flex-shrink: 0;
+ }
+
+ .card-rank {
+    font-size: 1.3rem;
+    font-weight: bold;
+ }
+
+ .card-suit {
+    font-size: 1.6rem;
+    align-self: flex-end;
+ }
+
+ .red-card {
+    color: #c62855;
+ }
+
+ .card-back {
+    background: linear-gradient(135deg, #321052, #8b42c8);
+    border: 2px solid #cda8ff;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+ }
