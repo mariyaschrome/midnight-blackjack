@@ -123,4 +123,14 @@ function shuffleDeck(cards) {
     return cards;
 }
 
+// 7. CREATE AND SHUFFLE FIRST DECK
+
+deck = shuffleDeck(createDeck());
+
+console.log("Deck created successfully!");
+
+console.log("Number of cards:", deck.length);
+
+console.log("Example card:", deck[0]);
+
 
