@@ -194,7 +194,7 @@ function renderCard(card, hidden = false) {
 
     // Make hearts and diamonds red
     if (card.suit === "♥" || card.suit === "♦") {
-        cardElement.classList.add("redd-card");
+        cardElement.classList.add("red-card");
     }
 
     // Add the card's rank and suit
@@ -234,7 +234,7 @@ function renderHands(hideDealerCard = false) {
     // Update the dealer's visible score
     if (hideDealerCard && dealerCards.length > 1) {
         dealerScoreDisplay.textContent = 
-           calculateScore(dealerCards[0]) + " + ?";
+           calculateScore([dealerCards[0]]) + " + ?";
     } else {
         dealerScoreDisplay.textContent =
            calculateScore(dealerCards);
